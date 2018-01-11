@@ -2,10 +2,15 @@ import argparse
 import sys
 import xml.etree.ElementTree as ElementTree
 
+# author : Xavier Prunck (2018)
+
 # https://docs.python.org/3/library/xml.etree.elementtree.html
 ELEMENT_NODE=1
 ATTRIBUTE_NODE=2
 TEXT_NODE=3
+
+class CustomFormatter(argparse.ArgumentDefaultsHelpFormatter, argparse.RawDescriptionHelpFormatter):
+    pass
 
 class MyTreeBuilder(ElementTree.TreeBuilder):
    def comment(self, data):
@@ -126,7 +131,34 @@ def writeFile(args, tree):
     tree.write(args.file.name, encoding=strEncoding, xml_declaration=isXml_declaration, method='xml')
     
 # Creating a parser
-parser = argparse.ArgumentParser(description="XML file modifier.")
+tab = "\t\t\t"
+e = "Supported XPath syntax:\n"
+e += "Syntax"+tab+"Meaning\n"
+e += "tag"+tab+"Selects all child elements with the given tag. For example, spam selects all child elements named spam, and spam/egg selects all grandchildren named egg in all children named spam.\n"
+e += "*"+tab+"Selects all child elements. For example, */egg selects all grandchildren named egg.\n"
+e += "."+tab+"Selects the current node. This is mostly useful at the beginning of the path, to indicate that it's a relative path.\n"
+e += "//"+tab+"Selects all subelements, on all levels beneath the current element. For example, .//egg selects all egg elements in the entire tree.\n"
+e += ".."+tab+"Selects the parent element. Returns None if the path attempts to reach the ancestors of the start element (the element find was called on).\n"
+e += "[@attrib]"+"\t\t"+"Selects all elements that have the given attribute.\n"
+e += "[@attrib='value']"+"\t"+"Selects all elements for which the given attribute has the given value. The value cannot contain quotes.\n"
+e += "[tag]"+tab+"Selects all elements that have a child named tag. Only immediate children are supported.\n"
+e += "[tag='text']"+"\t\t"+"Selects all elements that have a child named tag whose complete text content, including descendants, equals the given text.\n"
+e += "[position]"+"\t\t"+"Selects all elements that are located at the given position. The position can be either an integer (1 is the first position), the expression last() (for the last position), or a position relative to the last position (e.g. last()-1).\n"
+
+e += "text()"+tab+"Selects text of the current node.\n"
+e += "@attrib"+tab+"Selects attrib of the current node.\n"
+e += "\n"
+e += "Example:\n"
+e += 'file-xml country_data.xml --xpath ".//neighbor[@name='+chr(39)+'Costa Rica'+chr(39)+']" --read\n'
+e += 'file-xml country_data.xml --xpath ".//country[@name='+chr(39)+'Panama'+chr(39)+']/rank/text()" --set 12\n'
+e += 'file-xml country_data.xml --xpath ".//country[@name='+chr(39)+'Panama'+chr(39)+']/rank/@test" --set ok --declaration\n'
+e += 'file-xml country_data.xml --xpath ".//country[@name='+chr(39)+'Panama'+chr(39)+']/rank" --set "<c test='+chr(39)+'test'+chr(39)+'/>" --declarationutf-8 --indent\n'
+e += 'file-xml country_data.xml --xpath ".//country[@name='+chr(39)+'Panama'+chr(39)+']/rank" --setFile input.xml --declaration --encoding utf-8\n'
+e += 'file-xml country_data.xml --xpath ".//country[@name='+chr(39)+'Panama'+chr(39)+']/rank/@updated" --remove --declaration --encoding utf-8\n'
+e += 'file-xml country_data.xml --xpath ".//country[@name='+chr(39)+'Panama'+chr(39)+']/rank/text()" --remove --declaration --encoding utf-8\n'
+
+
+parser = argparse.ArgumentParser(description="XML file modifier.", epilog=e, formatter_class=CustomFormatter)
 
 # Adding arguments
 parser.add_argument('file', type=argparse.FileType('r+'), help='file xml')
