@@ -1,0 +1,5 @@
+
+persistance : https://forum.ubuntu-fr.org/viewtopic.php?pid=21510566
+
+clavier français : setxkbmap fr
+sudo mount -t ntfs-3g -o ro /dev/sda4 ./pxd2
