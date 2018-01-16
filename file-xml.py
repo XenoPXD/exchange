@@ -57,7 +57,10 @@ def read(args):
         if args.typeNode==TEXT_NODE:
             print(node.text)
         if args.typeNode==ELEMENT_NODE:
-            xmlstr = ElementTree.tostring(node, encoding='utf8', method='xml')
+            strEncoding=""
+            if args.encoding:
+                strEncoding=args.encoding[0]
+            xmlstr = ElementTree.tostring(node, encoding=strEncoding, method='xml').strip()
             sys.stdout.write(xmlstr.decode("utf-8") )       
             
 def set(args):
@@ -149,13 +152,13 @@ e += "text()"+tab+"Selects text of the current node.\n"
 e += "@attrib"+tab+"Selects attrib of the current node.\n"
 e += "\n"
 e += "Example:\n"
-e += 'file-xml country_data.xml --xpath ".//neighbor[@name='+chr(39)+'Costa Rica'+chr(39)+']" --read\n'
-e += 'file-xml country_data.xml --xpath ".//country[@name='+chr(39)+'Panama'+chr(39)+']/rank/text()" --set 12\n'
-e += 'file-xml country_data.xml --xpath ".//country[@name='+chr(39)+'Panama'+chr(39)+']/rank/@test" --set ok --declaration\n'
-e += 'file-xml country_data.xml --xpath ".//country[@name='+chr(39)+'Panama'+chr(39)+']/rank" --set "<c test='+chr(39)+'test'+chr(39)+'/>" --declarationutf-8 --indent\n'
-e += 'file-xml country_data.xml --xpath ".//country[@name='+chr(39)+'Panama'+chr(39)+']/rank" --setFile input.xml --declaration --encoding utf-8\n'
-e += 'file-xml country_data.xml --xpath ".//country[@name='+chr(39)+'Panama'+chr(39)+']/rank/@updated" --remove --declaration --encoding utf-8\n'
-e += 'file-xml country_data.xml --xpath ".//country[@name='+chr(39)+'Panama'+chr(39)+']/rank/text()" --remove --declaration --encoding utf-8\n'
+e += 'file-xml country_data.xml ".//neighbor[@name='+chr(39)+'Costa Rica'+chr(39)+']" --read\n'
+e += 'file-xml country_data.xml ".//country[@name='+chr(39)+'Panama'+chr(39)+']/rank/text()" --set 12\n'
+e += 'file-xml country_data.xml ".//country[@name='+chr(39)+'Panama'+chr(39)+']/rank/@test" --set ok --declaration\n'
+e += 'file-xml country_data.xml ".//country[@name='+chr(39)+'Panama'+chr(39)+']/rank" --set "<c test='+chr(39)+'test'+chr(39)+'/>" --declarationutf-8 --indent\n'
+e += 'file-xml country_data.xml ".//country[@name='+chr(39)+'Panama'+chr(39)+']/rank" --setFile input.xml --declaration --encoding utf-8\n'
+e += 'file-xml country_data.xml ".//country[@name='+chr(39)+'Panama'+chr(39)+']/rank/@updated" --remove --declaration --encoding utf-8\n'
+e += 'file-xml country_data.xml ".//country[@name='+chr(39)+'Panama'+chr(39)+']/rank/text()" --remove --declaration --encoding utf-8\n'
 
 
 parser = argparse.ArgumentParser(description="XML file modifier.", epilog=e, formatter_class=CustomFormatter)
@@ -175,20 +178,16 @@ parser.add_argument('-e', '--encoding', dest='encoding', nargs=1, type=str, defa
 # Parsing arguments
 args = parser.parse_args()
 # Usage
-print(args.file.name)
-print(args.xpath)
-print(args.indent[0])
-print(args.indent[1])
+#print(args.file.name)
+#print(args.xpath)
+#print(args.indent[0])
+#print(args.indent[1])
 #print(args.set[0])
 
 if (args.remove):
     detectType(args)
     remove(args)
 
-if (args.comment):
-    detectType(args)
-    comment(args)
-    
 if (args.read):
     detectType(args)
     read(args)
