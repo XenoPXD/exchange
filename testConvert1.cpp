@@ -12,6 +12,7 @@ int main(int argc, char *argv[]) {
 
     std::cout << argc << endl;
     string str = "22.3";
+    string a1 = argv[1];
     //std::cout << str << endl;
     //int i = std::istringstream ss(t);
     int i;
