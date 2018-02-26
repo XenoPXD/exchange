@@ -8,7 +8,7 @@ using namespace std;
 
 
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
 
     string str = "22.3";
     //std::cout << str << endl;
