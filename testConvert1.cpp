@@ -10,6 +10,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 
+    std::cout << argc << endl;
     string str = "22.3";
     //std::cout << str << endl;
     //int i = std::istringstream ss(t);
